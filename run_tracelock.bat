@@ -1,6 +1,6 @@
 @echo off
 cd /d "%~dp0"
-echo [TraceLock] Running multihreaded username scan...
+echo [TraceLock] Running multihreaded username scan with colored output...
 
 :: Change the username and output file below as needed
 set USERNAME=zaqar
