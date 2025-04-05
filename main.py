@@ -1,15 +1,26 @@
 import json
 import time
 import threading
+import os
 from cores.checker import check_username
 from cli.args import parse_args
 from colorama import Fore, init
 
 init(autoreset=True)
 
+def save_results(results, output_file, output_format='txt'):
+    if output_format == 'json':
+        with open(output_file, 'w') as json_file:
+            json.dump(results, json_file, indent=4)
+    else:
+        with open(output_file, 'w') as txt_file:
+            for site_name, url, _ in results:
+                txt_file.write(f"{site_name}: {url}\n")
+
 def main():
     args = parse_args()
     username = args.username
+    output_format = 'json' if args.output_json else 'txt'
 
     with open("config/sites.json", "r") as f:
         sites = json.load(f)
@@ -37,10 +48,11 @@ def main():
     print(f"Time taken: {round(time.time() - start_time, 2)}s")
         
     if args.output:
-        with open(args.output, 'w') as f:
-            for site_name, url, _ in found_results:
-                f.write(f"{site_name}: {url}\n")
-        print(f"{Fore.CYAN}Results saved to {args.output}")
+       save_results(found_results, args.output, output_format)
+       if output_format == 'json':
+           print(f"{Fore.CYAN}Results saved to {args.output} in JSON format")
+       else:
+           print(f"{Fore.CYAN}Results saved to {args.output}")
 
 if __name__ == "__main__":
     main()

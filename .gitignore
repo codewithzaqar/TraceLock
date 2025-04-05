@@ -1,1 +1,3 @@
-results.txt
+*.txt
+*.json
+cli/__pycache__
